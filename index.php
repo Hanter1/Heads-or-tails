@@ -9,6 +9,22 @@ class Player{
         $this->name = $name;
         $this->coins = $coins;
     }
+
+    public function point(Player $player)
+    {
+        $this->coins++;
+        $player->coins--;
+    }
+
+    public function bankrupt()
+    {
+        return $this->coins == 0;
+    }
+
+    public function bank()
+    {
+        return $this->coins;
+    }
 }
 
 class Game {
@@ -22,24 +38,21 @@ class Game {
         $this->player2 = $player2;
     }
 
+    public function flip()
+    {
+        return rand(0,1) ? "Орел" : "Решка";
+    }
+
     public function start()
     {
         while (true){
-            //Подбросить монету
-            $flip = rand(0,1) ? "Орел" : "Решка";
-
-            //Если орел, п1 получает монету, п2 теряет монету
-            //Если решка, п2 получает монету, п1 теряет монету
-            if ($flip == "Орел"){
-                $this->player1->coins++;
-                $this->player2->coins--;
+            if ($this->flip() == "Орел"){
+                $this->player1->point($this->player2);
             }else{
-                $this->player1->coins--;
-                $this->player2->coins++;
+                $this->player2->point($this->player1);
             }
 
-            //Если у кого-то кол-во монет будет равен 0, то игра окончена.
-            if ($this->player1->coins == 0 || $this->player2->coins ==0){
+            if ($this->player1->bankrupt() || $this->player2->bankrupt()){
                 return $this->end();
             }
 
@@ -47,13 +60,9 @@ class Game {
         }
     }
 
-    public function winner()
+    public function winner(): Player
     {
-        if($this->player1->coins > $this->player2->coins){
-            return $this->player1;
-        }else{
-            return $this->player2;
-        }
+        return $this->player1->bank() > $this->player2->bank() ? $this->player1 : $this->player2;
     }
 
     public function end()
@@ -61,8 +70,8 @@ class Game {
         // Победитель тот, у кого больше монет.
         echo <<<EOT
             Game over!
-            {$this->player1->name}: {$this->player1->coins}
-            {$this->player2->name}: {$this->player2->coins}
+            {$this->player1->name}: {$this->player1->bank()}
+            {$this->player2->name}: {$this->player2->bank()}
             Победитель: {$this->winner()->name}
             Кол-во подбрасываний: {$this->flips}
         EOT;
