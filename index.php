@@ -25,6 +25,11 @@ class Player{
     {
         return $this->coins;
     }
+
+    public function odds(Player $player)
+    {
+        return round($this->bank() / ($this->bank() + $player->bank()), 2) * 100 . '%';
+    }
 }
 
 class Game {
@@ -44,6 +49,17 @@ class Game {
     }
 
     public function start()
+    {
+        echo <<<EOT
+           {$this->player1->name}: шансы {$this->player1->odds($this->player2)}
+           {$this->player2->name}: шансы {$this->player2->odds($this->player1)}
+            
+        EOT;
+
+        $this->play();
+    }
+
+    public function play()
     {
         while (true){
             if ($this->flip() == "Орел"){
@@ -67,7 +83,6 @@ class Game {
 
     public function end()
     {
-        // Победитель тот, у кого больше монет.
         echo <<<EOT
             Game over!
             {$this->player1->name}: {$this->player1->bank()}
@@ -78,10 +93,10 @@ class Game {
 
     }
 }
+
 $game = new Game(
     new Player("ALEX", 100),
     new Player("DMITRY", 100)
 );
-
 
 $game->start();
