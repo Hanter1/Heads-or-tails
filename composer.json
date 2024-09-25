@@ -1,0 +1,15 @@
+{
+    "name": "pirog/heads-or-tails",
+    "autoload": {
+        "psr-4": {
+            "Pirog\\HeadsOrTails\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dmitry",
+            "email": "pirogovds98@gmail.com"
+        }
+    ],
+    "require": {}
+}
